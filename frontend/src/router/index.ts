@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
+import ChatView from '../views/ChatView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,7 +16,24 @@ const router = createRouter({
       name: 'register',
       component: RegisterView,
     },
+    {
+      path: '/chat',
+      name: 'chat',
+      component: ChatView,
+      meta: { requiresAuth: true },
+    },
   ],
+})
+
+// Skydda routes som kräver inloggning
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = !!localStorage.getItem('token')
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next('/')
+  } else {
+    next()
+  }
 })
 
 export default router

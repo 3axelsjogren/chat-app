@@ -1,9 +1,39 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 
 const username = ref('')
 const password = ref('')
+const errorMessage = ref('')
+const router = useRouter()
+
+async function handleLogin() {
+  errorMessage.value = ''
+
+  try {
+    const response = await fetch('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: username.value,
+        password: password.value,
+      }),
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      errorMessage.value = data.error || 'Något gick fel'
+      return
+    }
+
+    localStorage.setItem('token', data.token)
+    localStorage.setItem('username', data.username)
+    router.push('/chat')
+  } catch (err) {
+    errorMessage.value = 'Kunde inte ansluta till servern'
+  }
+}
 </script>
 
 <template>
@@ -20,7 +50,8 @@ const password = ref('')
       placeholder="Lösenord"
       class="my-input"
     />
-    <button class="my-button">Logga in</button>
+    <button class="my-button" @click="handleLogin">Logga in</button>
+    <p v-if="errorMessage" class="error-text">{{ errorMessage }}</p>
     <p class="register-link">
       Har du inget konto? <RouterLink to="/register">Registrera dig</RouterLink>
     </p>
@@ -56,6 +87,12 @@ const password = ref('')
   padding: 0.5rem;
   font-size: 0.8rem;
   border-radius: 4px;
+}
+
+.error-text {
+  color: #c0392b;
+  font-size: 0.85rem;
+  margin: 0;
 }
 
 .register-link {
