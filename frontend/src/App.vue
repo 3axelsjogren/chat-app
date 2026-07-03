@@ -1,47 +1,68 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { ref } from 'vue'
+
+const appName = ref('Chatt uapp!')
+const welcomeMessage = ref('Välkommen! Logga in för att börja chatta.')
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <div class="app-container">
+    <header class="app-header">
+      <h1>{{ appName }}</h1>
+    </header>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
+    <main class="app-main">
+      <p class="welcome-text">{{ welcomeMessage }}</p>
 
-  <main>
-    <TheWelcome />
-  </main>
+      <div class="content-area">
+        <!-- Framtida komponenter (login, chattlista etc.) hamnar här -->
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <p>Byggd av Axel</p>
+    </footer>
+  </div>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.app-header {
+  background-color: #2d61b4;
+  color: white;
+  padding: 2rem 3rem;
+  width: 100%;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+.app-header h1 {
+  font-size: 2rem;
+}
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+.app-main {
+  flex: 1;
+  padding: 2rem 3rem;
+  width: 100%;
+}
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.welcome-text {
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.content-area {
+  margin-top: 2rem;
+}
+
+.app-footer {
+  text-align: center;
+  padding: 1rem;
+  color: #888;
+  font-size: 0.9rem;
 }
 </style>
