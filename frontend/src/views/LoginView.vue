@@ -37,6 +37,7 @@ async function handleLogin() {
 </script>
 
 <template>
+  <p class="welcome-text">Välkommen! Logga in för att börja chatta.</p>
   <div class="login-form">
     <input
       v-model="username"
@@ -59,6 +60,13 @@ async function handleLogin() {
 </template>
 
 <style scoped>
+
+.welcome-text {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
 .login-form {
   display: flex;
   flex-direction: column;

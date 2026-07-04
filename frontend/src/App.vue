@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import { RouterView } from 'vue-router'
 
 const appName = ref('Chatt uapp!')
-const welcomeMessage = ref('Välkommen! Logga in för att börja chatta.')
 </script>
 
 <template>
@@ -13,8 +12,6 @@ const welcomeMessage = ref('Välkommen! Logga in för att börja chatta.')
     </header>
 
     <main class="app-main">
-      <p class="welcome-text">{{ welcomeMessage }}</p>
-
       <div class="content-area">
         <RouterView />
       </div>
@@ -51,11 +48,6 @@ const welcomeMessage = ref('Välkommen! Logga in för att börja chatta.')
   flex: 1;
   padding: 2rem 3rem;
   width: 100%;
-}
-
-.welcome-text {
-  font-size: 1.1rem;
-  color: #333;
 }
 
 .content-area {
