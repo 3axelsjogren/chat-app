@@ -1,18 +1,56 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import { ref , onMounted} from 'vue'
+
+interface Friend {
+  id: number
+  username: string
+}
 
 const router = useRouter()
+const friends = ref<Friend[]>([])
+const errorMessage = ref('')
 
 function logout() {
   localStorage.removeItem('token')
   localStorage.removeItem('username')
   router.push('/')
 }
+
+async function fetchFriends() {
+  errorMessage.value = ''
+
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/friends`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+    })
+    const data = await response.json()
+    if(!response.ok){
+      errorMessage.value = data.error || 'Kunde inte hämta vänner'
+      return
+    }
+    friends.value = data
+
+  }catch(err){
+    errorMessage.value = 'Kunde inte ansluta till servern'
+  }
+  
+}
+
+onMounted(() => {
+  fetchFriends()
+})
 </script>
 
 <template>
   <div class="chat-page">
-    <p>Välkommen till chatten! Här kommer vänlista och meddelanden att visas.</p>
+    <h2>Vänner</h2>
+    <p v-if="errorMessage" class="error-text">{{ errorMessage }}</p>
+    <ul>
+      <li v-for="friend in friends" :key="friend.id">
+        {{ friend.username }}
+      </li>
+</ul>
     <button class="logout-button" @click="logout">Logga ut</button>
   </div>
 </template>
