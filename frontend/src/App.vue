@@ -19,7 +19,7 @@ const appName = ref('Chatt uapp!')
     </main>
 
     <footer class="app-footer">
-      <p>byggd av axel, kingen med stort K själv</p>
+      <p>byggd av axel, Kingen med stort K själv</p>
     </footer>
   </div>
 </template>
