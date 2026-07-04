@@ -34,11 +34,11 @@ function initSocket(server) {
     console.log(`${socket.username} anslöt (userId: ${socket.userId})`);
 
     socket.on('disconnect', () => {
-    if (onlineUsers.get(socket.userId) === socket.id) {
-      onlineUsers.delete(socket.userId);
-    }
-    console.log(`${socket.username} kopplade från`);
-  });
+      if (onlineUsers.get(socket.userId) === socket.id) {
+        onlineUsers.delete(socket.userId);
+      }
+      console.log(`${socket.username} kopplade från`);
+    });
   });
 
   return io;

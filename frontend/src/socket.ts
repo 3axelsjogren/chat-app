@@ -7,12 +7,8 @@ const socket = io(import.meta.env.VITE_API_URL || undefined, {
   },
 })
 
-socket.on('connect', () => {
-  console.log('Socket ansluten:', socket.id)
-})
-
 socket.on('connect_error', (err) => {
-  console.log('Socket-anslutning misslyckades:', err.message)
+  console.error('Socket-anslutning misslyckades:', err.message)
 })
 
 export default socket
