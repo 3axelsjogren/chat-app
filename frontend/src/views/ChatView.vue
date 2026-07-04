@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
+import socket from '@/socket'
 
 interface Friend {
   id: number
@@ -36,6 +37,7 @@ const searchQuery = ref('')
 const searchResults = ref<Friend[]>([])
 
 const currentUserId = Number(localStorage.getItem('userId'))
+const unreadCounts = ref<Record<number, number>>({})
 
 function logout() {
   localStorage.removeItem('token')
@@ -173,13 +175,9 @@ async function declineRequest(friendshipId: number) {
   }
 }
 
-onMounted(() => {
-  fetchFriends()
-  fetchPendingRequests()
-})
-
 async function selectFriend(friend: Friend) {
   selectedFriend.value = friend
+  unreadCounts.value[friend.id] = 0
   messages.value = []
 
   try {
@@ -224,6 +222,29 @@ async function sendMessage() {
     errorMessage.value = 'Kunde inte ansluta till servern'
   }
 }
+
+function handleIncomingMessage(message: Message) {
+  const isOpenConversation =
+    selectedFriend.value &&
+    (message.sender_id === selectedFriend.value.id || message.receiver_id === selectedFriend.value.id)
+
+  if (isOpenConversation) {
+    messages.value.push(message)
+  } else {
+    const friendId = message.sender_id
+    unreadCounts.value[friendId] = (unreadCounts.value[friendId] || 0) + 1
+  }
+}
+
+onMounted(() => {
+  fetchFriends()
+  fetchPendingRequests()
+  socket.on('message:new', handleIncomingMessage)
+})
+
+onUnmounted(() => {
+  socket.off('message:new', handleIncomingMessage)
+})
 </script>
 
 <template>
@@ -260,7 +281,8 @@ async function sendMessage() {
       </ul>
       <ul class="friends-list">
         <li v-for="friend in friends" :key="friend.id" class="friend-item" @click="selectFriend(friend)">
-          {{ friend.username }}
+          <span>{{ friend.username }}</span>
+          <span v-if="unreadCounts[friend.id]" class="unread-badge">{{ unreadCounts[friend.id] }}</span>
         </li>
       </ul>
 
@@ -281,7 +303,7 @@ async function sendMessage() {
       <!-- Vän vald: visa konversationen -->
       <div v-else class="conversation">
         <div class="conversation-header">
-          <button class="back-button" @click="selectedFriend = null"> </button>
+          <button class="back-button" @click="selectedFriend = null"><-</button>
           {{ selectedFriend.username }}
         </div>
 
@@ -345,6 +367,23 @@ async function sendMessage() {
   color: #1a3a7a;
   cursor: pointer;
   transition: background-color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.unread-badge {
+  background-color: #c0392b;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
 }
 
 .friend-item:hover {

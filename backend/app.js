@@ -2,9 +2,11 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const http = require('http');
 const authRoutes = require('./src/routes/auth');
 const friendsRoutes = require('./src/routes/friends');
 const messageRoutes = require('./src/routes/messages');
+const { initSocket } = require('./src/socket');
 
 const app = express();
 const port = 3000;
@@ -25,6 +27,10 @@ app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
-app.listen(port, () => {
+const server = http.createServer(app);
+const io = initSocket(server);
+app.set('io', io);
+
+server.listen(port, () => {
   console.log(`Servern kör på http://localhost:${port}`);
 });

@@ -1,6 +1,7 @@
 const express = require('express');
 const pool = require('../db');
 const authenticateToken = require('../middleware/auth');
+const { onlineUsers } = require('../socket');
 
 const router = express.Router();
 
@@ -32,10 +33,24 @@ router.post('/', authenticateToken, async (req, res) =>{
             return res.status(403).json({ error: 'Ni är inte vänner' });
         }     
         
-        await pool.query(
+        const [result] = await pool.query(
         'INSERT INTO messages (sender_id, receiver_id, content) VALUES (?, ?, ?)',
         [senderId, receiverId, content]
         );
+
+        const io = req.app.get('io');
+        const receiverSocketId = onlineUsers.get(Number(receiverId));
+
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit('message:new', {
+                id: result.insertId,
+                sender_id: senderId,
+                receiver_id: Number(receiverId),
+                content,
+                is_read: 0,
+                created_at: new Date().toISOString(),
+            });
+        }
 
         res.status(201).json({ message: 'Meddelande skickat' });
 
