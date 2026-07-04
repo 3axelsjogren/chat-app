@@ -8,7 +8,8 @@ const appName = ref('Chatt uapp!')
 <template>
   <div class="app-container">
     <header class="app-header">
-      <h1>{{ appName }}</h1>
+    <img src="/ch-logo.png" alt="Chatt-logga" class="logo" />
+    <h1>{{ appName }}</h1>
     </header>
 
     <main class="app-main">
@@ -24,6 +25,7 @@ const appName = ref('Chatt uapp!')
 </template>
 
 <style scoped>
+
 .app-container {
   display: flex;
   flex-direction: column;
@@ -32,19 +34,27 @@ const appName = ref('Chatt uapp!')
 }
 
 .app-header {
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   background-color: #2d61b4;
   color: white;
   padding: 2rem 3rem;
   width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .app-header h1 {
   font-size: 2rem;
 }
 
+.logo {
+  width: 40px;
+  height: 40px;
+}
+
 .app-main {
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   flex: 1;
   padding: 2rem 3rem;
   width: 100%;
