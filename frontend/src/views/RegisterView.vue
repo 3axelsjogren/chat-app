@@ -1,10 +1,42 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 
 const username = ref('')
 const email = ref('')
 const password = ref('')
+const errorMessage = ref('')
+const router = useRouter()
+
+async function handleRegister() {
+  errorMessage.value = ''
+
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: username.value,
+        email: email.value,
+        password: password.value,
+      }),
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      errorMessage.value = data.error || 'Något gick fel'
+      return
+    }
+
+    localStorage.setItem('token', data.token)
+    localStorage.setItem('username', data.username)
+    router.push('/chat')
+  } catch (err) {
+    errorMessage.value = 'Kunde inte ansluta till servern'
+  }
+}
+
 </script>
 
 <template>
@@ -27,7 +59,8 @@ const password = ref('')
       placeholder="Lösenord"
       class="my-input"
     />
-    <button class="my-button">Skapa konto</button>
+    <button class="my-button" @click="handleRegister">Skapa konto</button>
+    <p v-if="errorMessage" class="error-text">{{ errorMessage }}</p>
     <p class="register-link">
       Har du redan ett konto? <RouterLink to="/">Logga in</RouterLink>
     </p>

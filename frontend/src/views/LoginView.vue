@@ -2,6 +2,8 @@
 import { ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 
+
+
 const username = ref('')
 const password = ref('')
 const errorMessage = ref('')
@@ -11,7 +13,7 @@ async function handleLogin() {
   errorMessage.value = ''
 
   try {
-    const response = await fetch('http://localhost:3000/api/auth/login', {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
