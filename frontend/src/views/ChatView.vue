@@ -227,7 +227,7 @@ async function sendMessage() {
 </script>
 
 <template>
-  <div class="chat-page">
+  <div class="chat-page" :class="{ 'has-selected': selectedFriend }">
     <!-- Vänster sidopanel -->
     <aside class="sidebar">
       <h2 class="sidebar-title">Vänner</h2>
@@ -281,6 +281,7 @@ async function sendMessage() {
       <!-- Vän vald: visa konversationen -->
       <div v-else class="conversation">
         <div class="conversation-header">
+          <button class="back-button" @click="selectedFriend = null"> </button>
           {{ selectedFriend.username }}
         </div>
 
@@ -378,6 +379,7 @@ async function sendMessage() {
 /* Chattyta */
 .chat-area {
   flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -394,6 +396,7 @@ async function sendMessage() {
   flex-direction: column;
   width: 100%;
   height: 100%;
+  min-width: 0;
 }
 
 .conversation-header {
@@ -402,6 +405,20 @@ async function sendMessage() {
   font-weight: 600;
   color: #2d61b4;
   font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.back-button {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  color: #2d61b4;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
 }
 
 .messages-list {
@@ -436,6 +453,8 @@ async function sendMessage() {
 
 .message-content {
   font-size: 0.95rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .message-time {
@@ -593,5 +612,26 @@ async function sendMessage() {
 
 .decline-button:hover {
   background-color: #a93226;
+}
+
+@media (max-width: 700px) {
+  .chat-page {
+    overflow: hidden;
+  }
+  .sidebar {
+    width: 100%;
+  }
+  .chat-area {
+    display: none;
+  }
+  .chat-page.has-selected .sidebar {
+    display: none;
+  }
+  .chat-page.has-selected .chat-area {
+    display: flex;
+  }
+  .back-button {
+    display: inline-flex;
+  }
 }
 </style>

@@ -15,5 +15,8 @@ export default defineConfig({
   },
   server: {
     allowedHosts: ['sandbox-disown-chatter.ngrok-free.dev'],
+    proxy: {
+      '/api': 'http://localhost:3000',
+    },
   },
 })

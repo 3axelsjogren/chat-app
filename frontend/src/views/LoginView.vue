@@ -47,12 +47,14 @@ async function handleLogin() {
       type="text"
       placeholder="Skriv ditt användarnamn"
       class="my-input"
+      @keyup.enter="handleLogin"
     />
     <input
       v-model="password"
       type="password"
       placeholder="Lösenord"
       class="my-input"
+      @keyup.enter="handleLogin"
     />
     <button class="my-button" @click="handleLogin">Logga in</button>
     <p v-if="errorMessage" class="error-text">{{ errorMessage }}</p>
