@@ -31,6 +31,8 @@ async function handleRegister() {
 
     localStorage.setItem('token', data.token)
     localStorage.setItem('username', data.username)
+    localStorage.setItem('userId', data.userId)
+    
     router.push('/chat')
   } catch (err) {
     errorMessage.value = 'Kunde inte ansluta till servern'
