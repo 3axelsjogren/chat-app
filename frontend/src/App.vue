@@ -1,8 +1,20 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterView } from 'vue-router'
+import socket from '@/socket'
 
 const appName = ref('Chatt uapp!')
+
+ const data = {
+    token: localStorage.getItem('token'),
+    username: localStorage.getItem('username'),
+    userId: localStorage.getItem('userId')
+  }
+
+if (data.token) {
+  socket.auth = { token: data.token }
+  socket.connect()
+}
 </script>
 
 <template>
