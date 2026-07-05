@@ -1,6 +1,8 @@
 import { io } from 'socket.io-client'
 
-const socket = io(import.meta.env.VITE_API_URL || undefined, {
+const socketUrl = window.location.origin
+
+const socket = io(socketUrl, {
   autoConnect: false,
   auth: {
     token: localStorage.getItem('token'),
