@@ -40,6 +40,7 @@ const currentUserId = Number(localStorage.getItem('userId'))
 const unreadCounts = ref<Record<number, number>>({})
 
 function logout() {
+  socket.disconnect()
   localStorage.removeItem('token')
   localStorage.removeItem('username')
   router.push('/')
@@ -70,7 +71,7 @@ async function searchUsers() {
     }
     searchResults.value = data
   } catch (err) {
-    errorMessage.value = 'Kunde inte ansluta till servern'
+    errorMessage.value = 'Kunde inte ansluta till servern1'
   }
 }
 
@@ -92,7 +93,7 @@ async function sendFriendRequest(userId: number) {
     // Ta bort personen från sökresultaten så man ser att förfrågan skickats
     searchResults.value = searchResults.value.filter((u) => u.id !== userId)
   } catch (err) {
-    errorMessage.value = 'Kunde inte ansluta till servern'
+    errorMessage.value = 'Kunde inte ansluta till servern2'
   }
 }
 
@@ -111,7 +112,7 @@ async function fetchFriends() {
     friends.value = data
 
   } catch (err) {
-    errorMessage.value = 'Kunde inte ansluta till servern'
+    errorMessage.value = 'Kunde inte ansluta till servern3'
   }
 }
 
@@ -127,7 +128,7 @@ async function fetchPendingRequests() {
     }
     pendingRequests.value = data
   } catch (err) {
-    errorMessage.value = 'Kunde inte ansluta till servern'
+    errorMessage.value = 'Kunde inte ansluta till servern4'
   }
 }
 
@@ -150,7 +151,7 @@ async function acceptRequest(friendshipId: number) {
     pendingRequests.value = pendingRequests.value.filter((r) => r.id !== friendshipId)
     fetchFriends()
   } catch (err) {
-    errorMessage.value = 'Kunde inte ansluta till servern'
+    errorMessage.value = 'Kunde inte ansluta till servern6'
   }
 }
 
@@ -171,7 +172,7 @@ async function declineRequest(friendshipId: number) {
     }
     pendingRequests.value = pendingRequests.value.filter((r) => r.id !== friendshipId)
   } catch (err) {
-    errorMessage.value = 'Kunde inte ansluta till servern'
+    errorMessage.value = 'Kunde inte ansluta till servern7'
   }
 }
 
@@ -191,7 +192,7 @@ async function selectFriend(friend: Friend) {
     }
     messages.value = data
   } catch (err) {
-    errorMessage.value = 'Kunde inte ansluta till servern'
+    errorMessage.value = 'Kunde inte ansluta till servern8'
   }
 }
 
@@ -219,7 +220,7 @@ async function sendMessage() {
     newMessage.value = ''
     selectFriend(selectedFriend.value)
   } catch (err) {
-    errorMessage.value = 'Kunde inte ansluta till servern'
+    errorMessage.value = 'Kunde inte ansluta till servern9'
   }
 }
 
@@ -239,6 +240,10 @@ function handleIncomingMessage(message: Message) {
 onMounted(() => {
   fetchFriends()
   fetchPendingRequests()
+
+  socket.auth = { token: localStorage.getItem('token') }
+  socket.connect()
+
   socket.on('message:new', handleIncomingMessage)
 })
 

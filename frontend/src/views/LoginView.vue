@@ -33,11 +33,8 @@ async function handleLogin() {
     localStorage.setItem('token', data.token)
     localStorage.setItem('username', data.username)
     localStorage.setItem('userId', data.userId)
-
-    socket.auth = { token: data.token }
-    socket.connect()
-
     router.push('/chat')
+    
   } catch (err) {
     errorMessage.value = 'Kunde inte ansluta till servern'
   }
